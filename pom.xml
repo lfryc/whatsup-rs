@@ -47,8 +47,8 @@
         <version.war.plugin>2.1.1</version.war.plugin>
 
         <!-- maven-compiler-plugin -->
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.7</maven.compiler.source>
     </properties>
 
     <dependencyManagement>
@@ -95,6 +95,21 @@
             <artifactId>jboss-jaxrs-api_1.1_spec</artifactId>
             <scope>provided</scope>
         </dependency>
+
+    	<dependency>
+    		<groupId>org.projectlombok</groupId>
+    		<artifactId>lombok</artifactId>
+    		<version>1.14.8</version>
+    		<scope>provided</scope>
+    	</dependency>
+        
+        <dependency> 
+            <groupId>javax.json</groupId> 
+            <artifactId>javax.json-api</artifactId> 
+            <version>1.0</version> 
+            <scope>provided</scope>
+        </dependency> 
+        
     </dependencies>
 
     <build>
