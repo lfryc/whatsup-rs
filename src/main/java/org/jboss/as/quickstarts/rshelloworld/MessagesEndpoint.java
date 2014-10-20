@@ -53,6 +53,8 @@ public class MessagesEndpoint {
 
         UnifiedMessage pushMessage = messageBuilder
             .alert(String.format("Message from %s", message.getAuthor()))
+            .simplePush(Long.toString(version))
+            .attribute("version", Long.toString(version))
             .build();
 
         sender.send(pushMessage, new MessageResponseCallback() {
