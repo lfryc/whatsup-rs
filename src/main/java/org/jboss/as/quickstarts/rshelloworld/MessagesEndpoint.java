@@ -25,13 +25,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-/**
- * A simple REST service which is able to say hello to someone using HelloService Please take a look at the web.xml where JAX-RS
- * is enabled
- *
- * @author gbrey@redhat.com
- *
- */
+import org.jboss.aerogear.unifiedpush.JavaSender;
+import org.jboss.aerogear.unifiedpush.message.UnifiedMessage;
 
 @Path("/messages")
 public class MessagesEndpoint {
@@ -39,12 +34,23 @@ public class MessagesEndpoint {
     @Inject
     private MessageStore messageStore;
 
+    @Inject
+    private JavaSender sender;
+
+    @Inject
+    private UnifiedMessage.Builder unifiedMessage;
+
     @POST
     @Path("/")
     @Produces({ MediaType.APPLICATION_JSON })
     public String putMessage(Message message) {
         long version = System.currentTimeMillis();
         messageStore.addMessage(version, message);
+
+        sender.send(
+                unifiedMessage
+                    .alert(String.format("Message from %s", message.getAuthor()))
+                    .build());
 
         return Json.createObjectBuilder()
                 .add("version", version)
