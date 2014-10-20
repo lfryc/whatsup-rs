@@ -23,9 +23,12 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 
 import org.jboss.aerogear.unifiedpush.JavaSender;
+import org.jboss.aerogear.unifiedpush.message.MessageResponseCallback;
 import org.jboss.aerogear.unifiedpush.message.UnifiedMessage;
 
 @Path("/messages")
@@ -38,24 +41,35 @@ public class MessagesEndpoint {
     private JavaSender sender;
 
     @Inject
-    private UnifiedMessage.Builder unifiedMessage;
+    private UnifiedMessage.Builder messageBuilder;
 
     @POST
     @Path("/")
     @Produces({ MediaType.APPLICATION_JSON })
-    public String putMessage(Message message) {
-        long version = System.currentTimeMillis();
+    public void putMessage( Message message, @Suspended final AsyncResponse response ) {
+
+        final long version = System.currentTimeMillis();
         messageStore.addMessage(version, message);
 
-        sender.send(
-                unifiedMessage
-                    .alert(String.format("Message from %s", message.getAuthor()))
-                    .build());
+        UnifiedMessage pushMessage = messageBuilder
+            .alert(String.format("Message from %s", message.getAuthor()))
+            .build();
 
-        return Json.createObjectBuilder()
-                .add("version", version)
-                .build()
-                .toString();
+        sender.send(pushMessage, new MessageResponseCallback() {
+
+            @Override
+            public void onError(Throwable throwable) {
+                response.resume(throwable);
+            }
+
+            @Override
+            public void onComplete(int statusCode) {
+                response.resume(Json.createObjectBuilder()
+                        .add("version", version)
+                        .build()
+                        .toString());
+            }
+        });
     }
 
     @GET

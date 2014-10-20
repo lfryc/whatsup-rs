@@ -41,7 +41,7 @@
 
         <version.jboss.maven.plugin>7.4.Final</version.jboss.maven.plugin>
 
-        <version.jboss.spec.javaee.6.0>3.0.2.Final-redhat-7</version.jboss.spec.javaee.6.0>
+        <version.jboss.spec.javaee.7.0>1.0.1.Final</version.jboss.spec.javaee.7.0>
 
         <!-- other plugin versions -->
         <version.war.plugin>2.1.1</version.war.plugin>
@@ -64,8 +64,8 @@
                 use this stack with any version of JBoss EAP that implements Java EE 6. -->
             <dependency>
                 <groupId>org.jboss.spec</groupId>
-                <artifactId>jboss-javaee-6.0</artifactId>
-                <version>${version.jboss.spec.javaee.6.0}</version>
+                <artifactId>jboss-javaee-7.0</artifactId>
+                <version>${version.jboss.spec.javaee.7.0}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -85,14 +85,20 @@
             as the API is included in JBoss EAP 6 -->
         <dependency>
             <groupId>org.jboss.spec.javax.annotation</groupId>
-            <artifactId>jboss-annotations-api_1.1_spec</artifactId>
+            <artifactId>jboss-annotations-api_1.2_spec</artifactId>
             <scope>provided</scope>
         </dependency>
 
         <!-- Import the JAX-RS API, we use provided scope as the API is included in JBoss EAP 6 -->
         <dependency>
-            <groupId>org.jboss.spec.javax.ws.rs</groupId>
-            <artifactId>jboss-jaxrs-api_1.1_spec</artifactId>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>jaxrs-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.spec.javax.json</groupId>
+            <artifactId>jboss-json-api_1.0_spec</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -102,13 +108,6 @@
     		<version>1.14.8</version>
     		<scope>provided</scope>
     	</dependency>
-        
-        <dependency> 
-            <groupId>javax.json</groupId> 
-            <artifactId>javax.json-api</artifactId> 
-            <version>1.0</version> 
-            <scope>provided</scope>
-        </dependency>
         
         <dependency>
             <groupId>org.jboss.aerogear</groupId>
