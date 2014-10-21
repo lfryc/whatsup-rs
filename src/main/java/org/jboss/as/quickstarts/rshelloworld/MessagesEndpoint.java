@@ -16,6 +16,9 @@
  */
 package org.jboss.as.quickstarts.rshelloworld;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.ws.rs.GET;
@@ -34,6 +37,8 @@ import org.jboss.aerogear.unifiedpush.message.UnifiedMessage;
 @Path("/messages")
 public class MessagesEndpoint {
 
+    private Logger log = Logger.getLogger("MessagesEndpoint");
+
     @Inject
     private MessageStore messageStore;
 
@@ -48,12 +53,14 @@ public class MessagesEndpoint {
     @Produces({ MediaType.APPLICATION_JSON })
     public void putMessage( Message message, @Suspended final AsyncResponse response ) {
 
-        final long version = System.currentTimeMillis();
+        log.info("sending push message...");
+
+        final long version = System.currentTimeMillis() / 1000;
         messageStore.addMessage(version, message);
 
         UnifiedMessage pushMessage = messageBuilder
             .alert(String.format("Message from %s", message.getAuthor()))
-            .simplePush(Long.toString(version))
+            .simplePush("version=" + version)
             .attribute("version", Long.toString(version))
             .build();
 
@@ -61,11 +68,14 @@ public class MessagesEndpoint {
 
             @Override
             public void onError(Throwable throwable) {
+                log.log(Level.WARNING, "push message error", throwable);
+                throwable.printStackTrace();
                 response.resume(throwable);
             }
 
             @Override
             public void onComplete(int statusCode) {
+                log.info("push messages successfully sent with statusCode=" + statusCode);
                 response.resume(Json.createObjectBuilder()
                         .add("version", version)
                         .build()
