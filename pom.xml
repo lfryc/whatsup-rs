@@ -101,13 +101,6 @@
             <artifactId>jboss-json-api_1.0_spec</artifactId>
             <scope>provided</scope>
         </dependency>
-
-    	<dependency>
-    		<groupId>org.projectlombok</groupId>
-    		<artifactId>lombok</artifactId>
-    		<version>1.14.8</version>
-    		<scope>provided</scope>
-    	</dependency>
         
         <dependency>
             <groupId>org.jboss.aerogear</groupId>
