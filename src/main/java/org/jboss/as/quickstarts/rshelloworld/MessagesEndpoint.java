@@ -62,6 +62,7 @@ public class MessagesEndpoint {
             .alert(String.format("Message from %s", message.getAuthor()))
             .simplePush("version=" + version)
             .attribute("version", Long.toString(version))
+            .attribute("page", "cordova")
             .build();
 
         sender.send(pushMessage, new MessageResponseCallback() {
